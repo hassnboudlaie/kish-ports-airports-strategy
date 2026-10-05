@@ -3,14 +3,15 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<meta name="theme-color" content="#0b2743" />
+<meta name="theme-color" content="#1e3d6c" />
 <title>سامانه اجرای راهبرد | بنادر و فرودگاه‌های کیش</title>
 <style>
 :root{
-  --navy:#0b2743;--navy2:#123b5d;--sea:#0f766e;--sky:#0b82c5;--cyan:#e8f6fb;
-  --bg:#f4f7f9;--card:#fff;--ink:#172433;--muted:#667485;--line:#e5ebf0;
+  /* EDITABLE BRAND TOKENS — aligned with the official Kish Ports portal */
+  --navy:#1e3d6c;--navy2:#24578a;--sea:#24578a;--sky:#3b78a9;--cyan:#edf4fa;
+  --bg:#f4f6f8;--card:#fff;--ink:#141617;--muted:#64707c;--line:#e1e7ed;
   --soft:#f8fafc;--ok:#16805b;--warn:#b86a08;--bad:#bc4444;--neutral:#8a96a3;
-  --shadow:0 10px 28px rgba(23,36,51,.07);--radius:18px;--tap:44px;
+  --shadow:0 10px 28px rgba(30,61,108,.08);--radius:18px;--tap:44px;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -18,18 +19,21 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:Vazirmatn,"Segoe
 button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid rgba(11,130,197,.18);outline-offset:2px}
 .en{direction:ltr;unicode-bidi:embed;display:inline-block}.muted{color:var(--muted)}.hidden{display:none!important}
 .app{min-height:100vh;display:grid;grid-template-columns:248px minmax(0,1fr)}
-.sidebar{height:100vh;position:sticky;top:0;background:linear-gradient(180deg,var(--navy),#0d3150);color:#fff;padding:24px 14px;display:flex;flex-direction:column}
-.brand{padding:0 8px 20px;border-bottom:1px solid rgba(255,255,255,.12)}
-.brand-mark{display:flex;align-items:center;gap:11px}.brand-logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(145deg,#13a8a0,#2e8dcc);display:grid;place-items:center;box-shadow:0 10px 24px rgba(0,0,0,.18)}
-.brand-logo svg{width:24px;height:24px}.brand h1{font-size:14px;line-height:1.7;margin:0}.brand small{display:block;margin-top:3px;color:#b8ccdc;font-size:10px}
+.sidebar{height:100vh;position:sticky;top:0;background:linear-gradient(180deg,var(--navy),#173456);color:#fff;padding:22px 14px;display:flex;flex-direction:column}
+.brand{padding:0 8px 20px;border-bottom:1px solid rgba(255,255,255,.14)}
+.official-brand{display:block;background:#fff;border-radius:15px;padding:10px 12px;box-shadow:0 10px 24px rgba(0,0,0,.13)}
+.official-brand img{display:block;width:100%;height:46px;object-fit:contain}
+.brand-app{padding:12px 3px 0}.brand h1{font-size:14px;line-height:1.7;margin:0}.brand small{display:block;margin-top:4px;color:#c9d8e6;font-size:9px;letter-spacing:.05em}
+.top-title-wrap{display:flex;align-items:center;gap:11px}.mobile-official-logo{display:none}
 .nav{display:grid;gap:7px;margin-top:18px}.nav button{min-height:var(--tap);border:0;border-radius:13px;background:transparent;color:#c9d8e4;padding:10px 12px;text-align:right;display:flex;align-items:center;gap:11px;font-weight:650}.nav button:hover,.nav button.active{background:rgba(255,255,255,.10);color:#fff}.nav svg{width:20px;height:20px;flex:0 0 auto;opacity:.94}
 .sidebar-note{margin-top:auto;padding:14px 11px;border-top:1px solid rgba(255,255,255,.12);color:#b8ccdc;font-size:10px;line-height:1.9}
-.main{min-width:0}.topbar{min-height:72px;position:sticky;top:0;z-index:15;border-bottom:1px solid rgba(229,235,240,.92);background:rgba(244,247,249,.91);backdrop-filter:blur(12px);display:flex;justify-content:space-between;align-items:center;padding:12px 26px}
-.topbar h2{margin:0;font-size:18px}.topbar .subtitle{font-size:11px;color:var(--muted);margin-top:4px}.top-actions{display:flex;gap:8px}.btn{min-height:40px;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:11px;padding:8px 13px;font-weight:700}.btn:hover{border-color:#cbd6df}.btn.primary{border-color:var(--sea);background:var(--sea);color:#fff}.btn.ghost{background:transparent}.btn.small{min-height:34px;padding:6px 10px;font-size:11px}.icon-btn{width:40px;padding:0;display:grid;place-items:center}.icon-btn svg{width:19px;height:19px}
+.main{min-width:0}.topbar{min-height:72px;position:sticky;top:0;z-index:15;border-bottom:1px solid rgba(255,255,255,.12);background:rgba(30,61,108,.97);backdrop-filter:blur(12px);display:flex;justify-content:space-between;align-items:center;padding:12px 26px;color:#fff}
+.topbar h2{margin:0;font-size:18px}.topbar .subtitle{font-size:11px;color:#d4e0ec;margin-top:4px}.top-actions{display:flex;gap:8px}.btn{min-height:40px;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:11px;padding:8px 13px;font-weight:700}.btn:hover{border-color:#cbd6df}.topbar .btn{border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.10);color:#fff}.topbar .btn.primary{background:#fff;border-color:#fff;color:var(--navy)}.btn.primary{border-color:var(--sea);background:var(--sea);color:#fff}.btn.ghost{background:transparent}.btn.small{min-height:34px;padding:6px 10px;font-size:11px}.icon-btn{width:40px;padding:0;display:grid;place-items:center}.icon-btn svg{width:19px;height:19px}
 .content{max-width:1380px;margin:auto;padding:24px 28px 90px}.page{display:none}.page.active{display:block}
 .info-strip{display:flex;align-items:center;gap:9px;background:#edf6fa;border:1px solid #d8ebf3;color:#36586a;border-radius:13px;padding:10px 13px;margin-bottom:15px;font-size:11px;line-height:1.8}.info-strip svg{width:18px;height:18px;flex:0 0 auto;color:var(--sky)}
-.hero{background:linear-gradient(135deg,#fff 0%,#f8fbfd 58%,#eaf7f7 100%);border:1px solid var(--line);border-radius:24px;padding:28px;box-shadow:var(--shadow);overflow:hidden;position:relative}
-.hero:after{content:"";position:absolute;left:-70px;top:-100px;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle,rgba(15,118,110,.13),rgba(15,118,110,0) 70%);pointer-events:none}
+.hero{background:linear-gradient(135deg,#fff 0%,#f8fafc 58%,#edf4fa 100%);border:1px solid var(--line);border-top:4px solid var(--navy2);border-radius:24px;padding:28px;box-shadow:var(--shadow);overflow:hidden;position:relative}
+.hero:after{content:"";position:absolute;left:-70px;top:-100px;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle,rgba(36,87,138,.14),rgba(36,87,138,0) 70%);pointer-events:none}
+.hero-brand-strip{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px;position:relative;z-index:1}.domain-badge{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid #d9e4ef;border-radius:999px;padding:6px 10px;color:var(--navy);font-size:10px;font-weight:850;box-shadow:0 4px 14px rgba(30,61,108,.05)}.domain-badge img{width:22px;height:22px;object-fit:contain}
 .kicker{font-size:10px;letter-spacing:.06em;color:var(--sea);font-weight:900}.hero h3{font-size:23px;line-height:1.9;margin:9px 0 8px;max-width:1130px}.hero p{margin:0;color:var(--muted);line-height:2;max-width:970px;font-size:12px}
 .hero-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:17px}.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid #dbe6eb;background:#fff;border-radius:999px;padding:6px 9px;font-size:10px;color:#50606f}.chip strong{color:var(--ink)}
 .how{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:15px 0 4px}.step{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;gap:10px;align-items:flex-start}.step-no{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:#e9f5f4;color:var(--sea);font-weight:900;flex:0 0 auto}.step b{display:block;font-size:12px;margin-bottom:3px}.step span{font-size:10px;color:var(--muted);line-height:1.7}
@@ -47,7 +51,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-vis
 .bottom-nav{display:none}.modal-backdrop{position:fixed;inset:0;z-index:50;background:rgba(8,24,38,.42);display:none;align-items:center;justify-content:center;padding:18px}.modal-backdrop.show{display:flex}.modal{width:min(680px,100%);max-height:85vh;overflow:auto;background:#fff;border-radius:22px;padding:20px;box-shadow:0 30px 80px rgba(8,24,38,.25)}.modal-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.modal h3{margin:0;font-size:16px}.guide-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:15px}.guide{border:1px solid var(--line);border-radius:14px;padding:12px}.guide b{font-size:11px}.guide p{font-size:9px;color:var(--muted);line-height:1.8;margin:5px 0 0}.danger-link{border:0;background:transparent;color:#a04b4b;font-size:9px;text-decoration:underline;padding:5px}
 @media(max-width:1100px){.pillar-grid,.kpi-grid{grid-template-columns:repeat(2,1fr)}.how{grid-template-columns:repeat(2,1fr)}.check-layout,.dash-grid{grid-template-columns:1fr}}
 @media(max-width:760px){
-  body{font-size:13px}.app{display:block}.sidebar{display:none}.topbar{min-height:64px;padding:10px 14px}.topbar h2{font-size:15px}.topbar .subtitle{font-size:9px}.top-actions .btn.primary{display:none}.content{padding:14px 12px 92px}.hero{padding:19px 16px;border-radius:19px}.hero h3{font-size:17px;line-height:1.9}.hero p{font-size:10px}.how{grid-template-columns:1fr 1fr;gap:8px}.step{padding:11px}.pillar-grid,.kpi-grid,.initiative-grid,.stats{grid-template-columns:1fr}.goal-main{grid-template-columns:1fr}.select{min-width:0;width:100%}.toolbar{align-items:stretch}.segmented{width:100%;display:grid;grid-template-columns:repeat(3,1fr)}.segmented button{padding:6px 5px}.form-grid{grid-template-columns:1fr}.form-grid .full{grid-column:auto}.bottom-nav{position:fixed;display:grid;grid-template-columns:repeat(4,1fr);right:0;left:0;bottom:0;z-index:30;padding:7px max(8px,env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);backdrop-filter:blur(13px);border-top:1px solid var(--line);box-shadow:0 -8px 25px rgba(23,36,51,.07)}.bottom-nav button{border:0;background:transparent;min-height:50px;border-radius:11px;color:#70808d;font-size:8px;font-weight:800;display:grid;place-items:center;gap:2px}.bottom-nav button.active{color:var(--sea);background:#eef7f6}.bottom-nav svg{width:20px;height:20px}.guide-grid{grid-template-columns:1fr}.info-strip{font-size:9px}.section-head{margin-top:20px}.section-head p{display:none}
+  body{font-size:13px}.app{display:block}.sidebar{display:none}.topbar{min-height:68px;padding:9px 12px}.topbar h2{font-size:14px}.topbar .subtitle{font-size:8px}.top-actions .btn.primary{display:none}.mobile-official-logo{display:block;width:82px;height:34px;object-fit:contain;background:#fff;border-radius:9px;padding:4px 7px}.top-title-wrap{gap:8px}.content{padding:14px 12px 92px}.hero{padding:19px 16px;border-radius:19px}.hero h3{font-size:17px;line-height:1.9}.hero p{font-size:10px}.how{grid-template-columns:1fr 1fr;gap:8px}.step{padding:11px}.pillar-grid,.kpi-grid,.initiative-grid,.stats{grid-template-columns:1fr}.goal-main{grid-template-columns:1fr}.select{min-width:0;width:100%}.toolbar{align-items:stretch}.segmented{width:100%;display:grid;grid-template-columns:repeat(3,1fr)}.segmented button{padding:6px 5px}.form-grid{grid-template-columns:1fr}.form-grid .full{grid-column:auto}.bottom-nav{position:fixed;display:grid;grid-template-columns:repeat(4,1fr);right:0;left:0;bottom:0;z-index:30;padding:7px max(8px,env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);backdrop-filter:blur(13px);border-top:1px solid var(--line);box-shadow:0 -8px 25px rgba(23,36,51,.07)}.bottom-nav button{border:0;background:transparent;min-height:50px;border-radius:11px;color:#70808d;font-size:8px;font-weight:800;display:grid;place-items:center;gap:2px}.bottom-nav button.active{color:var(--navy2);background:#eef4fa}.bottom-nav svg{width:20px;height:20px}.guide-grid{grid-template-columns:1fr}.info-strip{font-size:9px}.section-head{margin-top:20px}.section-head p{display:none}
 }
 </style>
 </head>
@@ -63,7 +67,12 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-vis
 </svg>
 <div class="app">
 <aside class="sidebar">
-  <div class="brand"><div class="brand-mark"><div class="brand-logo"><svg><use href="#i-target"/></svg></div><div><h1>سامانه اجرای راهبرد<br>بنادر و فرودگاه‌های کیش</h1><small>Strategy Execution · Simple View</small></div></div></div>
+  <div class="brand">
+    <a class="official-brand" href="https://kishports.com/" target="_blank" rel="noopener" title="پورتال رسمی شرکت">
+      <img src="https://kishports.com/wp-content/uploads/2023/02/kishports_main.svg" alt="لوگوی رسمی شرکت توسعه و مدیریت بنادر و فرودگاه‌های کیش">
+    </a>
+    <div class="brand-app"><h1>سامانه اجرای راهبرد</h1><small>STRATEGY EXECUTION · KISH PORTS & AIRPORTS</small></div>
+  </div>
   <nav class="nav" id="desktopNav">
     <button class="active" data-page="home"><svg><use href="#i-home"/></svg><span>راهبرد در یک نگاه</span></button>
     <button data-page="goals"><svg><use href="#i-target"/></svg><span>اهداف و شاخص‌ها</span></button>
@@ -73,11 +82,11 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-vis
   <div class="sidebar-note">نسخه ساده‌شده برای آشنایی و استقرار اولیه<br>مبنای محتوا: سند راهبردی تحول و پیشرفت شرکت</div>
 </aside>
 <main class="main">
-<header class="topbar"><div><h2 id="pageTitle">راهبرد در یک نگاه</h2><div class="subtitle">از راهبرد تا اقدام، بدون پیچیدگی</div></div><div class="top-actions"><button class="btn icon-btn" id="helpBtn" title="راهنما"><svg><use href="#i-help"/></svg></button><button class="btn primary" onclick="go('checkin')">ثبت پیشرفت</button></div></header>
+<header class="topbar"><div class="top-title-wrap"><img class="mobile-official-logo" src="https://kishports.com/wp-content/uploads/2023/02/kishports_main.svg" alt=""><div><h2 id="pageTitle">راهبرد در یک نگاه</h2><div class="subtitle">از راهبرد تا اقدام، بدون پیچیدگی</div></div></div><div class="top-actions"><button class="btn icon-btn" id="helpBtn" title="راهنما"><svg><use href="#i-help"/></svg></button><button class="btn primary" onclick="go('checkin')">ثبت پیشرفت</button></div></header>
 <div class="content">
 <section class="page active" id="home">
   <div class="info-strip"><svg><use href="#i-info"/></svg><span><b>نسخه آزمایشی:</b> هیچ عدد اجرایی از خودمان ساخته نشده است. داده‌های ثبت‌شده فقط روی همین دستگاه ذخیره می‌شوند و برای اطلاعات محرمانه مناسب نیستند.</span></div>
-  <div class="hero"><div class="kicker">مقصد نهایی سازمان · ULTIMATE GOAL</div><h3>تبدیل‌شدن به سازمانی پیشرو، ایمن و نوآور در مدیریت حمل‌ونقل هوایی و دریایی که به‌عنوان دروازه بین‌المللی جزیره کیش، الگویی برای توسعه پایدار، سرمایه‌گذاری راهبردی و ارتقاء برند ملی و منطقه‌ای ایران باشد.</h3><p>برای استفاده از این سامانه فقط چهار کار لازم است: راهبرد را ببینید، هدف را انتخاب کنید، پیشرفت را کوتاه و منظم ثبت کنید، و موارد نیازمند توجه را در داشبورد مدیریت کنید.</p><div class="hero-meta"><span class="chip"><strong>۶</strong> ستون راهبردی</span><span class="chip"><strong>۱۳</strong> هدف راهبردی</span><span class="chip"><strong>۱۸</strong> شاخص سلامت</span><span class="chip">مرور هفتگی ساده</span></div></div>
+  <div class="hero"><div class="hero-brand-strip"><span class="domain-badge"><img src="https://kishports.com/wp-content/uploads/2023/02/ships.svg" alt="">بنادر کیش</span><span class="domain-badge"><img src="https://kishports.com/wp-content/uploads/2023/02/airport_opration.svg" alt="">فرودگاه کیش</span></div><div class="kicker">مقصد نهایی سازمان · ULTIMATE GOAL</div><h3>تبدیل‌شدن به سازمانی پیشرو، ایمن و نوآور در مدیریت حمل‌ونقل هوایی و دریایی که به‌عنوان دروازه بین‌المللی جزیره کیش، الگویی برای توسعه پایدار، سرمایه‌گذاری راهبردی و ارتقاء برند ملی و منطقه‌ای ایران باشد.</h3><p>برای استفاده از این سامانه فقط چهار کار لازم است: راهبرد را ببینید، هدف را انتخاب کنید، پیشرفت را کوتاه و منظم ثبت کنید، و موارد نیازمند توجه را در داشبورد مدیریت کنید.</p><div class="hero-meta"><span class="chip"><strong>۶</strong> ستون راهبردی</span><span class="chip"><strong>۱۳</strong> هدف راهبردی</span><span class="chip"><strong>۱۸</strong> شاخص سلامت</span><span class="chip">مرور هفتگی ساده</span></div></div>
   <div class="how"><div class="step"><div class="step-no">۱</div><div><b>راهبرد را ببین</b><span>بدانیم مقصد و اولویت‌ها چیست.</span></div></div><div class="step"><div class="step-no">۲</div><div><b>هدف را انتخاب کن</b><span>روی چند نتیجه مهم تمرکز کنیم.</span></div></div><div class="step"><div class="step-no">۳</div><div><b>پیشرفت را ثبت کن</b><span>کوتاه، واقعی و منظم.</span></div></div><div class="step"><div class="step-no">۴</div><div><b>تصمیم بگیر</b><span>ریسک، مانع و گام بعد روشن باشد.</span></div></div></div>
   <div class="section-head"><div><h3>ستون‌های راهبردی</h3><p>هر ستون توضیح می‌دهد سازمان «چگونه» به مقصد نهایی نزدیک می‌شود.</p></div><button class="btn small" onclick="go('goals')">مشاهده اهداف</button></div>
   <div class="pillar-grid" id="pillarGrid"></div>
