@@ -1,0 +1,26 @@
+/* Executive V3 enhancements */
+.stats{grid-template-columns:repeat(4,1fr)!important}
+.stat small{display:block;margin-top:5px;font-size:8px;color:#8794a0}
+.executive-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.exec-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;font-size:8px;color:var(--muted)}
+.coverage-badge{display:inline-flex;align-items:center;border-radius:999px;padding:3px 7px;background:#eef4fa;color:var(--navy2);font-weight:800}
+.coverage-badge.partial{background:#fff4e6;color:#9a5d08}
+.freshness-badge{display:inline-flex;align-items:center;border-radius:999px;padding:3px 7px;background:#f2f4f6;color:#687684}
+.freshness-badge.stale{background:#fff0f0;color:#a74444}
+.decision-list,.pillar-health-list{display:grid;gap:7px}
+.decision{border:1px solid #dce7f1;background:#f8fbfe;border-radius:12px;padding:10px}
+.decision strong{display:block;font-size:9px;line-height:1.7}
+.decision p{font-size:9px;color:#536678;line-height:1.7;margin:5px 0 0}
+.pillar-health{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fbfcfd}
+.pillar-health-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.pillar-health h4{margin:0;font-size:10px}
+.pillar-health-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;font-size:8px;color:var(--muted)}
+.dashboard-principle{margin:0 0 12px;border:1px solid #d9e5ef;background:#f8fbfe;border-radius:13px;padding:10px 12px;font-size:9px;line-height:1.8;color:#506274}
+.search-input{min-width:220px;max-width:320px}
+.term-fa{font-weight:800;line-height:1.7}
+.term-en{display:block;direction:ltr;text-align:right;font-size:8px;color:var(--muted);font-weight:600;margin-top:2px}
+.kpi-note,.initiative-note{border:1px solid #dde7ef;background:#f8fbfd;border-radius:12px;padding:9px 11px;font-size:9px;color:#617180;line-height:1.8;margin-bottom:10px}
+.validation{display:none;color:#a74444;background:#fff1f1;border:1px solid #f0d0d0;border-radius:10px;padding:7px 9px;font-size:9px;margin-top:10px}
+.validation.show{display:block}
+@media(max-width:1100px){.executive-grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)!important}}
+@media(max-width:760px){.stats{grid-template-columns:1fr 1fr!important}.search-input{min-width:0;max-width:none;width:100%}}
