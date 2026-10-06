@@ -121,6 +121,22 @@
     {id:'commitment',title:'تعهد ۳۰ روزه',prompt:'تا ۳۰ روز آینده یک تعهد قابل سنجش تعریف کنید که در جلسه بعد بتوانیم آن را مرور کنیم.',ph:'تا تاریخ …، من/واحد ما … را انجام می‌دهیم و با … می‌سنجیم.'}
   ];
 
+  function applyAdminConfig(){
+    var cfg=window.WORKSHOP_ADMIN_CONFIG||{};
+    if(cfg.exercises){
+      exercises=exercises.map(function(ex){
+        var o=cfg.exercises[ex.id]||{};
+        return {id:ex.id,title:o.title||ex.title,prompt:o.prompt||ex.prompt,ph:o.ph||ex.ph};
+      });
+    }
+    if(cfg.editable){
+      document.querySelectorAll('[data-editable]').forEach(function(el){
+        var k=el.dataset.editable;
+        if(cfg.editable[k]!=null)el.innerHTML=cfg.editable[k];
+      });
+    }
+  }
+
   function answerKey(ex){return deptLabel()+'::'+ex}
   function renderExercises(){
     var ids=state.selected||[];
@@ -186,9 +202,12 @@
     try{return JSON.parse(localStorage.getItem(EDIT_STORAGE)||'{}')}catch(e){return {}}
   }
   function applyEditableOverrides(){
+    var central=(window.WORKSHOP_ADMIN_CONFIG&&window.WORKSHOP_ADMIN_CONFIG.editable)||{};
     var o=getEditableOverrides();
     document.querySelectorAll('[data-editable]').forEach(function(el){
-      var k=el.dataset.editable;if(o[k]!=null)el.innerHTML=o[k];
+      var k=el.dataset.editable;
+      if(central[k]!=null)el.innerHTML=central[k];
+      if(o[k]!=null)el.innerHTML=o[k];
       el.contentEditable=editMode?'true':'false';
       el.spellcheck=editMode;
       if(!el.dataset.editBound){
@@ -212,6 +231,7 @@
 
   function init(){
     load();
+    applyAdminConfig();
     renderDepartments();renderProfile();renderObjectives();renderExercises();renderCanvas(false);applyEditableOverrides();
     document.querySelectorAll('.step').forEach(function(b){b.addEventListener('click',function(){step(Number(b.dataset.step))})});
     document.querySelectorAll('[data-next]').forEach(function(b){b.addEventListener('click',function(){step(Number(b.dataset.next))})});
