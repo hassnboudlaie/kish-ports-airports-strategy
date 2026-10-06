@@ -130,4 +130,27 @@
     document.getElementById('sStale').textContent=states.length?faNum(stale.length)+' هدف با داده قدیمی‌تر از '+faNum(STALE_DAYS)+' روز':'هنوز داده‌ای ثبت نشده';
     const ep=document.getElementById('execProgress');
     if(!states.length) ep.innerHTML='<div class="empty">هنوز داده مدیریتی وجود ندارد.<br>با ثبت اولین پیشرفت، تصویر این بخش ساخته می‌شود.</div>';
-    els
+    else ep.innerHTML=states.map(({o,c})=>{const st=statusInfo(c),pct=st.pct??0,fresh=Date.now()-c.ts<=staleMs;return `<div class="exec-row"><div class="exec-head"><span>O${o.id} — ${o.title}</span><span>${c.partial?'داده‌های موجود: ':''}${faNum(pct)}٪</span></div><div class="progress"><span style="width:${pct}%;background:${st.cls==='ok'?'var(--ok)':st.cls==='warn'?'var(--warn)':'var(--bad)'}"></span></div><div class="exec-meta"><span class="status"><i class="dot ${st.cls}"></i>${st.label}</span><span class="coverage-badge ${c.partial?'partial':''}">پوشش KR: ${faNum(c.coveragePct)}٪</span><span class="freshness-badge ${fresh?'':'stale'}">${fresh?'به‌روز':'قدیمی‌تر از '+faNum(STALE_DAYS)+' روز'}</span></div></div>`;}).join('');
+    const rl=document.getElementById('riskList');
+    if(!risk.length) rl.innerHTML='<div class="empty">مورد نیازمند توجه ثبت نشده است.</div>';
+    else rl.innerHTML=risk.map(({o,c})=>`<article class="risk"><strong>O${o.id} — ${o.title}</strong><span class="status" style="margin-top:6px"><i class="dot ${statusInfo(c).cls}"></i>${statusInfo(c).label}</span>${c.blocker?`<p>مانع: ${c.blocker}</p>`:'<p>مانع مشخصی ثبت نشده است.</p>'}${c.next?`<p>گام بعد: ${c.next}</p>`:''}</article>`).join('');
+    const ph=document.getElementById('pillarHealth');
+    ph.innerHTML=pillars.map(p=>{const os=objectivesForPillar(p.id),ss=os.map(o=>objectiveState(o.id)).filter(Boolean),risks=ss.filter(c=>c.conf!=='on-track').length,totalKr=os.reduce((a,o)=>a+o.krs.length,0),updKr=os.reduce((a,o)=>a+o.krs.filter((_,i)=>krState(o.id,i)).length,0),cov=totalKr?Math.round(updKr/totalKr*100):0,avg=ss.length?Math.round(ss.reduce((a,c)=>a+Number(c.progress||0),0)/ss.length):null;return `<article class="pillar-health"><div class="pillar-health-head"><h4>${p.fa}</h4><span class="status"><i class="dot ${risks?'warn':ss.length?'ok':''}"></i>${risks?faNum(risks)+' مورد نیازمند توجه':ss.length?'بدون ریسک ثبت‌شده':'بدون داده'}</span></div><div class="pillar-health-meta"><span>اهداف دارای داده: ${faNum(ss.length)}/${faNum(os.length)}</span><span>پوشش KR: ${faNum(cov)}٪</span><span>میانگین داده‌های موجود: ${avg==null?'—':faNum(avg)+'٪'}</span></div></article>`;}).join('');
+    const dl=document.getElementById('decisionList'),decisions=risk.filter(x=>x.c.blocker||x.c.next);
+    if(!decisions.length) dl.innerHTML='<div class="empty">فعلاً تصمیم مشخصی از Check-inهای پرریسک استخراج نشده است.</div>';
+    else dl.innerHTML=decisions.slice(0,6).map(({o,c})=>`<article class="decision"><strong>O${o.id} — ${o.title}</strong>${c.blocker?`<p><b>مانع:</b> ${c.blocker}</p>`:''}${c.next?`<p><b>گام بعد:</b> ${c.next}</p>`:''}${c.owner?`<p><b>مسئول:</b> ${c.owner}</p>`:''}</article>`).join('');
+  };
+
+  go=function(id,updateHash=true){
+    if(!titles[id])id='home';
+    document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));
+    document.querySelectorAll('[data-page]').forEach(b=>{const active=b.dataset.page===id;b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
+    document.getElementById('pageTitle').textContent=titles[id]||'';
+    if(updateHash && location.hash!=='#/'+id) history.pushState(null,'','#/'+id);
+    if(id==='dashboard')renderDashboard(); if(id==='checkin')renderTimeline(); window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+  window.addEventListener('popstate',()=>go((location.hash.match(/^#\/(home|goals|checkin|dashboard)$/)||[])[1]||'home',false));
+  const slider=document.getElementById('checkProgress'); if(slider) slider.addEventListener('input',e=>e.target.setAttribute('aria-valuetext',faNum(e.target.value)+' درصد'));
+  renderCheckGoal(); renderAllDynamic(); go((location.hash.match(/^#\/(home|goals|checkin|dashboard)$/)||[])[1]||'home',false);
+})();
