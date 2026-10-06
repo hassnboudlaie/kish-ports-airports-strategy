@@ -43,4 +43,49 @@
     const saved=document.getElementById('savedMsg');
     if(saved){saved.setAttribute('role','status');saved.setAttribute('aria-live','polite');}
 
-    const dashboard=document.getElementById('
+    const dashboard=document.getElementById('dashboard');
+    if(dashboard && !document.getElementById('sCoverage')){
+      dashboard.innerHTML=`
+        <div class="section-head"><div><h3>داشبورد مدیرعامل · Executive View</h3><p>تمرکز روی سلامت راهبرد، پوشش داده، ریسک و موارد نیازمند تصمیم.</p></div></div>
+        <div class="dashboard-principle"><b>اصل نمایش:</b> «پیشرفت» و «پوشش داده» دو مفهوم جدا هستند. اگر همه نتایج کلیدی یک هدف به‌روز نشده باشند، درصد پیشرفت با برچسب <b>داده جزئی</b> نمایش داده می‌شود تا برداشت مدیریتی گمراه‌کننده ایجاد نشود.</div>
+        <div class="stats">
+          <div class="stat"><strong id="sUpdated">۰</strong><span>هدف دارای داده</span><small>از ۱۳ هدف راهبردی</small></div>
+          <div class="stat"><strong id="sRisk">۰</strong><span>نیازمند توجه / عقب</span><small>براساس آخرین Check-in</small></div>
+          <div class="stat"><strong id="sCoverage">۰٪</strong><span>پوشش داده KR</span><small>نتایج کلیدی به‌روزشده</small></div>
+          <div class="stat"><strong id="sFresh">—</strong><span>آخرین به‌روزرسانی</span><small id="sStale">—</small></div>
+        </div>
+        <div class="dash-grid"><div class="panel"><h3>سلامت اهداف راهبردی</h3><div class="hint">پیشرفت ثبت‌شده همراه با Coverage و تازگی داده نمایش داده می‌شود.</div><div id="execProgress"></div></div><div class="panel"><h3>نیازمند توجه مدیریت</h3><div class="hint">اهدافی که وضعیت آن‌ها «نیازمند توجه» یا «عقب از برنامه» است.</div><div class="risk-list" id="riskList"></div></div></div>
+        <div class="executive-grid"><div class="panel"><h3>سلامت ستون‌های راهبردی</h3><div class="hint">نمای فشرده از وضعیت ۶ ستون راهبردی.</div><div class="pillar-health-list" id="pillarHealth"></div></div><div class="panel"><h3>تصمیم‌های مورد نیاز</h3><div class="hint">مانع و گام بعدی از آخرین Check-inهای دارای ریسک.</div><div class="decision-list" id="decisionList"></div></div></div>
+        <div class="dashboard-note">این نسخه هنوز <b>Prototype / Pilot</b> است و داده‌ها فقط روی همین دستگاه ذخیره می‌شوند. برای استفاده سازمانی واقعی، احراز هویت، پایگاه داده مرکزی، سطح دسترسی، Audit Trail و Backup لازم است.</div>
+        <div style="text-align:left;margin-top:8px"><button class="danger-link" onclick="resetDemo()">پاک‌کردن داده‌های این دستگاه</button></div>`;
+    }
+  }
+
+  ensureV3UI();
+
+  objectiveState=function(id){
+    const o=objectives.find(x=>x.id===id),direct=latestState(`obj-${id}`),all=(o?.krs||[]),states=all.map((_,i)=>krState(id,i)).filter(Boolean);
+    const total=all.length,coverage=states.length,coveragePct=total?Math.round((coverage/total)*100):100;
+    if(!states.length) return direct?{...direct,coverage:0,total,coveragePct:0,partial:true,derived:false}:null;
+    if(direct && direct.ts>Math.max(...states.map(x=>x.ts))) return {...direct,coverage,total,coveragePct,partial:coverage<total,derived:false};
+    const progress=Math.round(states.reduce((a,c)=>a+Number(c.progress||0),0)/states.length);
+    const conf=states.some(c=>c.conf==='off-track')?'off-track':states.some(c=>c.conf==='at-risk')?'at-risk':'on-track';
+    const latest=[...states].sort((a,b)=>b.ts-a.ts)[0];
+    return {...latest,progress,conf,coverage,total,coveragePct,partial:coverage<total,derived:true};
+  };
+
+  goalLabel=function(g){
+    if(g.startsWith('obj-')){const id=+g.split('-')[1],o=objectives.find(x=>x.id===id);return `هدف ${faNum(id)} — ${o?.title||''}`;}
+    if(g.startsWith('kr-')){const p=g.split('-'),id=+p[1],idx=+p[2],o=objectives.find(x=>x.id===id),k=o?.krs?.[idx]||'';return `هدف ${faNum(id)} · KR${idx+1} — ${termFa(k)} / ${k}`;}
+    return g;
+  };
+
+  renderGoals=function(){
+    const pf=document.getElementById('pillarFilter').value,q=goalQuery.trim().toLowerCase();
+    const arr=objectives.filter(o=>(!pf||String(o.pillar)===pf)&&(!q||o.title.toLowerCase().includes(q)||o.krs.some(k=>k.toLowerCase().includes(q)||termFa(k).toLowerCase().includes(q))));
+    document.getElementById('goalList').innerHTML=arr.map(o=>{
+      const p=pillarOf(o.pillar),c=objectiveState(o.id),st=statusInfo(c),pct=st.pct??0,coverage=c?.coverage??0,total=o.krs.length;
+      const krs=o.krs.map((k,i)=>{const kc=krState(o.id,i),ks=statusInfo(kc),kp=ks.pct??0;return `<div class="kr-row"><div class="kr-id">KR${i+1}</div><div><div class="kr-name"><span class="term-fa">${termFa(k)}</span><span class="term-en">${k}</span></div><div class="kr-meta"><span class="status"><i class="dot ${ks.cls}"></i>${ks.label}</span>${owners[`kr-${o.id}-${i}`]?`<span>مسئول: ${owners[`kr-${o.id}-${i}`]}</span>`:''}<span>${ks.pct==null?'به‌روزرسانی نشده':faNum(ks.pct)+'٪'}</span></div><div class="progress mini"><span style="width:${kp}%"></span></div></div></div>`;}).join('');
+      const note=c?.derived?(coverage===total?`همه ${faNum(total)} نتیجه کلیدی به‌روز است`:`${faNum(coverage)} از ${faNum(total)} نتیجه کلیدی به‌روز است`):'آخرین ثبت مستقیم هدف';
+      const cov=c?`<span class="coverage-badge ${c.partial?'partial':''}">پوشش KR: ${faNum(c.coveragePct)}٪</span>`:'';
+      const pctLabel=st.pct==null?'بدون داده':(c?.partial?'داده‌های موجود
