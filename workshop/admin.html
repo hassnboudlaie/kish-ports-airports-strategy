@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1e3d6c">
+<title>مدیریت محتوای کارگاه | Kish Strategy Workshop</title>
+<style>
+:root{--navy:#1e3d6c;--blue:#24578a;--bg:#f3f6f9;--card:#fff;--ink:#17212b;--muted:#687887;--line:#dbe4ec;--ok:#16805b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Vazirmatn,Tahoma,Arial,sans-serif;direction:rtl}
+header{background:var(--navy);color:#fff;padding:14px 18px;position:sticky;top:0;z-index:10}header .in{max-width:1100px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
+h1{font-size:16px;margin:0}.sub{font-size:9px;color:#d7e3ee;margin-top:3px}.wrap{max-width:1100px;margin:auto;padding:20px 16px 70px}.notice{border:1px solid #d8e5ef;background:#f8fbfe;border-radius:13px;padding:11px 13px;font-size:10px;line-height:1.9;color:#566a7b;margin-bottom:13px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:17px;padding:16px;margin-top:12px}.panel h2{font-size:14px;margin:0 0 12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:grid;gap:5px;font-size:10px;color:#556878}.field.full{grid-column:1/-1}
+input,textarea{width:100%;border:1px solid #d8e2ea;border-radius:10px;padding:9px 10px;font:inherit}.field textarea{min-height:80px;resize:vertical;line-height:1.8}
+.ex{border:1px solid var(--line);border-radius:13px;padding:12px;margin-top:9px;background:#fbfcfd}.ex h3{font-size:11px;margin:0 0 8px}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:8px 11px;min-height:38px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn.good{background:#edf8f3;border-color:#cae7da;color:#176846}
+pre{direction:ltr;text-align:left;white-space:pre-wrap;word-break:break-word;background:#0f2134;color:#eef6ff;padding:12px;border-radius:12px;font-size:9px;max-height:320px;overflow:auto}
+@media(max-width:720px){.grid{grid-template-columns:1fr}.field.full{grid-column:auto}header .in{align-items:flex-start;flex-direction:column}.actions .btn{flex:1;justify-content:center}}
+</style>
+</head>
+<body>
+<header><div class="in"><div><h1>Admin Edit Mode · محتوای مرکزی کارگاه</h1><div class="sub">KISH PORTS & AIRPORTS · STRATEGY WORKSHOP</div></div><a class="btn" href="./" target="_blank">باز کردن نسخه کارگاه</a></div></header>
+<div class="wrap">
+  <div class="notice"><b>این صفحه ویرایشگر محتوای مرکزی است.</b> تغییرات اینجا ابتدا در مرورگر شما آماده می‌شوند. برای انتشار برای همه شرکت‌کنندگان، فایل <code>admin-config.js</code> باید در GitHub جایگزین و Commit شود. چون سایت روی GitHub Pages است، بدون Backend نباید کلید دسترسی GitHub را داخل مرورگر ذخیره کنیم. این روش امن‌تر و Version-controlled است.</div>
+
+  <section class="panel">
+    <h2>متن‌های اصلی کارگاه</h2>
+    <div class="grid" id="mainFields"></div>
+  </section>
+
+  <section class="panel">
+    <h2>تمرین‌ها</h2>
+    <div id="exerciseFields"></div>
+  </section>
+
+  <section class="panel">
+    <h2>انتشار</h2>
+    <div class="actions">
+      <button class="btn primary" id="downloadBtn">دانلود admin-config.js</button>
+      <button class="btn good" id="copyBtn">کپی کد انتشار</button>
+      <a class="btn" href="https://github.com/hassnboudlaie/kish-ports-airports-strategy/edit/main/workshop/admin-config.js" target="_blank" rel="noopener noreferrer">ویرایش فایل مرکزی در GitHub</a>
+      <a class="btn" href="./" target="_blank">پیش‌نمایش کارگاه</a>
+    </div>
+    <div class="notice" style="margin-top:12px">مسیر انتشار مرکزی: <b>workshop/admin-config.js</b>. بعد از Commit، GitHub Pages نسخه جدید را برای همه کاربران منتشر می‌کند.</div>
+    <pre id="preview"></pre>
+  </section>
+</div>
+
+<script src="admin-config.js?v=1"></script>
+<script>
+(function(){
+  var cfg=JSON.parse(JSON.stringify(window.WORKSHOP_ADMIN_CONFIG||{editable:{},exercises:{}}));
+  var main=[
+    ['app-title','عنوان کارگاه'],
+    ['hero-title','تیتر اصلی'],
+    ['hero-desc','توضیح Hero'],
+    ['profile-heading','عنوان مرحله ۱'],
+    ['profile-hint','راهنمای مرحله ۱'],
+    ['objective-heading','عنوان مرحله ۲'],
+    ['objective-hint','راهنمای مرحله ۲'],
+    ['exercise-heading','عنوان مرحله ۳'],
+    ['exercise-hint','راهنمای مرحله ۳'],
+    ['commit-heading','عنوان مرحله ۴'],
+    ['commit-hint','راهنمای مرحله ۴'],
+    ['canvas-heading','عنوان مرحله ۵'],
+    ['canvas-hint','راهنمای مرحله ۵']
+  ];
+  var exOrder=['mission','evidence','gap','metric','initiative','dependency','risk','commitment'];
+  function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')}
+  function render(){
+    document.getElementById('mainFields').innerHTML=main.map(function(m){
+      var k=m[0],label=m[1],v=(cfg.editable&&cfg.editable[k])||'';
+      var multi=k.indexOf('desc')>-1||k.indexOf('hint')>-1;
+      return '<label class="field '+(multi?'full':'')+'">'+label+(multi?'<textarea data-main="'+k+'">'+esc(v)+'</textarea>':'<input data-main="'+k+'" value="'+esc(v)+'">')+'</label>';
+    }).join('');
+    document.getElementById('exerciseFields').innerHTML=exOrder.map(function(id,i){
+      var e=(cfg.exercises&&cfg.exercises[id])||{};
+      return '<div class="ex"><h3>تمرین '+(i+1)+' · '+id+'</h3><div class="grid"><label class="field">عنوان<input data-ex="'+id+'" data-key="title" value="'+esc(e.title||'')+'"></label><label class="field">Placeholder<input data-ex="'+id+'" data-key="ph" value="'+esc(e.ph||'')+'"></label><label class="field full">Prompt<textarea data-ex="'+id+'" data-key="prompt">'+esc(e.prompt||'')+'</textarea></label></div></div>';
+    }).join('');
+    bind();updatePreview();
+  }
+  function bind(){
+    document.querySelectorAll('[data-main]').forEach(function(el){el.addEventListener('input',function(){cfg.editable=cfg.editable||{};cfg.editable[el.dataset.main]=el.value;updatePreview()})});
+    document.querySelectorAll('[data-ex]').forEach(function(el){el.addEventListener('input',function(){cfg.exercises=cfg.exercises||{};cfg.exercises[el.dataset.ex]=cfg.exercises[el.dataset.ex]||{};cfg.exercises[el.dataset.ex][el.dataset.key]=el.value;updatePreview()})});
+  }
+  function code(){
+    cfg.version=(cfg.version||1)+1;cfg.updatedAt=new Date().toISOString();
+    return 'window.WORKSHOP_ADMIN_CONFIG = '+JSON.stringify(cfg,null,2)+';\n';
+  }
+  function updatePreview(){document.getElementById('preview').textContent='window.WORKSHOP_ADMIN_CONFIG = '+JSON.stringify(cfg,null,2)+';'}
+  document.getElementById('downloadBtn').addEventListener('click',function(){
+    var txt=code(),blob=new Blob([txt],{type:'application/javascript;charset=utf-8'}),a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);a.download='admin-config.js';a.click();URL.revokeObjectURL(a.href);
+  });
+  document.getElementById('copyBtn').addEventListener('click',async function(){
+    var txt=code();await navigator.clipboard.writeText(txt);this.textContent='کپی شد ✓';setTimeout(()=>this.textContent='کپی کد انتشار',1200);
+  });
+  render();
+})();
+</script>
+</body>
+</html>
