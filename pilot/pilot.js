@@ -136,7 +136,7 @@ document.addEventListener("submit",function(e){
   var o=objectives.find(function(x){return x.id===oid});if(!o||!o.krs[ki])return;
   var a=Number(document.getElementById("pilotMetricBaseline").value),b=Number(document.getElementById("pilotMetricTarget").value),c=Number(document.getElementById("pilotMetricCurrent").value);
   var p=metricProgress(a,b,c);if(p===null){alert("مقادیر نامعتبر یا Baseline برابر Target است.");return}
-  var own=document.getElementById("pilotMetricOwner").value.trim(),risk=document.getElementById("pilotMetricRisk").value,note=document.getElementById("pilotMetricNote").value.trim(),at=Date.now();
+  var own=document.getElementById("pilotMetricOwner").value.trim()||(pilot.people.find(function(p){return p.id===document.getElementById("metricPerson").value})||{}).name||"",risk=document.getElementById("pilotMetricRisk").value,note=document.getElementById("pilotMetricNote").value.trim(),at=Date.now();
   var row={id:id(),objectiveId:oid,krIndex:ki,label:"هدف "+oid+" · "+o.krs[ki],baseline:a,target:b,current:c,progress:p,risk:risk,owner:own,note:note,at:at};
   row.unitId=document.getElementById("metricUnit").value;row.personId=document.getElementById("metricPerson").value;pilot.measurements.push(row);
   checkins.unshift({goal:"kr-"+oid+"-"+ki,progress:p,conf:risk,owner:own,win:note,blocker:"",next:"",ts:at,pilotMeasured:true});
@@ -145,16 +145,16 @@ document.addEventListener("submit",function(e){
  }
  if(e.target.id==="taskForm"){
   var title=document.getElementById("taskTitle").value.trim();if(!title)return;
-  pilot.tasks.push({id:id(),title:title,unitId:document.getElementById("taskUnit").value,personId:document.getElementById("taskPerson").value,workstream:document.getElementById("taskWorkstream").value,objectiveId:Number(document.getElementById("taskObjective").value),krIndex:document.getElementById("taskKr").value,owner:document.getElementById("taskOwner").value.trim(),due:document.getElementById("taskDue").value,status:document.getElementById("taskStatus").value,note:document.getElementById("taskNote").value.trim(),at:Date.now()});
-  if(save()){e.target.reset();renderTasks()}return;
+  pilot.tasks.push({id:id(),title:title,unitId:document.getElementById("taskUnit").value,personId:document.getElementById("taskPerson").value,workstream:document.getElementById("taskWorkstream").value,objectiveId:Number(document.getElementById("taskObjective").value),krIndex:document.getElementById("taskKr").value,owner:document.getElementById("taskOwner").value.trim()||(pilot.people.find(function(p){return p.id===document.getElementById("taskPerson").value})||{}).name||"",due:document.getElementById("taskDue").value,status:document.getElementById("taskStatus").value,note:document.getElementById("taskNote").value.trim(),at:Date.now()});
+  if(save()){var unit=document.getElementById("taskUnit").value,person=document.getElementById("taskPerson").value,stream=document.getElementById("taskWorkstream").value;e.target.reset();document.getElementById("taskUnit").value=unit;fillPeople(document.getElementById("taskPerson"),unit);document.getElementById("taskPerson").value=person;document.getElementById("taskWorkstream").value=stream;renderTasks()}return;
  }
  if(e.target.id==="meetingForm"){
-  var obj=document.getElementById("meetingObjective").value,title2=document.getElementById("meetingTitle").value.trim(),next=document.getElementById("meetingNext").value.trim(),due=document.getElementById("meetingDue").value,owner=document.getElementById("meetingOwner").value.trim();
+  var obj=document.getElementById("meetingObjective").value,title2=document.getElementById("meetingTitle").value.trim(),next=document.getElementById("meetingNext").value.trim(),due=document.getElementById("meetingDue").value,owner=document.getElementById("meetingOwner").value.trim()||(pilot.people.find(function(p){return p.id===document.getElementById("meetingPerson").value})||{}).name||"";
   if(!title2)return;
   var x={id:id(),title:title2,unitId:document.getElementById("meetingUnit").value,personId:document.getElementById("meetingPerson").value,workstream:document.getElementById("meetingWorkstream").value,date:document.getElementById("meetingDate").value,objectiveId:obj,owner:owner,notes:document.getElementById("meetingNotes").value.trim(),decision:document.getElementById("meetingDecision").value.trim(),next:next,due:due,at:Date.now()};
   pilot.meetings.push(x);
   if(next&&obj){pilot.tasks.push({id:id(),title:next,unitId:document.getElementById("meetingUnit").value,personId:document.getElementById("meetingPerson").value,workstream:document.getElementById("meetingWorkstream").value,objectiveId:Number(obj),krIndex:"",owner:owner,due:due,status:"todo",note:"پیگیری از جلسه: "+title2,at:Date.now(),meetingId:x.id})}
-  if(save()){e.target.reset();renderMeetings();alert("جلسه ذخیره شد"+(next&&obj?" و اقدام پیگیری به وظایف اضافه شد.":"."))}return;
+  if(save()){var meetingUnit=document.getElementById("meetingUnit").value,meetingPerson=document.getElementById("meetingPerson").value,meetingStream=document.getElementById("meetingWorkstream").value;e.target.reset();document.getElementById("meetingUnit").value=meetingUnit;fillPeople(document.getElementById("meetingPerson"),meetingUnit);document.getElementById("meetingPerson").value=meetingPerson;document.getElementById("meetingWorkstream").value=meetingStream;renderMeetings();alert("جلسه ذخیره شد"+(next&&obj?" و اقدام پیگیری به وظایف اضافه شد.":"."))}return;
  }
 });
 
@@ -193,7 +193,7 @@ function childrenOf(parent){
  return ORG_CHART.filter(function(n){return n.parentId===parent})
 }
 function orgSelectorOptions(withNone){
- return (withNone?'<option value="">کل شرکت / انتخاب نشده</option>':'')+ORG_CHART.map(function(n){
+ return (withNone?'<option value="">کل شرکت / انتخاب نشده</option><option value="ceo">حوزه مدیرعامل و ستاد</option>':'')+ORG_CHART.map(function(n){
   var path=treePath(n.id).join(" ← ");
   return '<option value="'+esc(n.id)+'">'+esc(path)+'</option>';
  }).join("")
@@ -288,7 +288,7 @@ function renderOrgUnitPlan(){
  document.getElementById("orgExecutionStatus").value=state.execution||"unstarted";
  document.getElementById("orgRevisionOwner").value=state.revisionOwner||"";
  document.getElementById("orgExecutionOwner").value=state.executionOwner||"";
- document.getElementById("orgUnitNotes").value=state.notes||"";
+ document.getElementById("orgUnitNotes").value=state.notes||"";document.getElementById("orgStatusMessage").textContent="";
  document.getElementById("orgChosenPeople").innerHTML=pilot.people.filter(function(p){return p.unitId===scope}).map(function(p){return '<span class="pilot-people-chip">'+esc(p.name)+' · '+esc(p.job)+'</span>'}).join("")||'<span class="pilot-muted">برای این واحد هنوز نام هیچ فردی ثبت نشده است.</span>';
 }
 function focusOrgNode(nodeId){
@@ -331,7 +331,7 @@ orgPage.innerHTML=
  '<div id="orgPlanControls" hidden><form id="orgPlanForm">'+
  '<div class="pilot-tracks"><div><b>۱. بازنگری سند راهبردی</b><label>وضعیت مشارکت<select id="orgRevisionStatus"><option value="unstarted">شروع‌نشده</option><option value="collecting">جمع‌آوری نظر و اطلاعات</option><option value="reviewing">در دست بازبینی</option><option value="validated">بازبینی‌شده / نیازمند تصویب نهایی</option></select></label><label>مسئول/نماینده واحد<input id="orgRevisionOwner" maxlength="100" placeholder="پس از تأیید معرفی شود"></label></div>'+
  '<div><b>۲. استقرار نظام OKR</b><label>وضعیت اجرا<select id="orgExecutionStatus"><option value="unstarted">شروع‌نشده</option><option value="preparing">آماده‌سازی و آموزش</option><option value="pilot">پایلوت در واحد</option><option value="live">اجرای جاری / در حال پایش</option></select></label><label>مسئول/سفیر OKR<input id="orgExecutionOwner" maxlength="100" placeholder="پس از تأیید معرفی شود"></label></div></div>'+
- '<label class="pilot-field">نکات و نیازهای واحد<textarea id="orgUnitNotes" rows="3" placeholder="تعاملات بین‌واحدی، چالش‌ها، پیشنهادهای بازنگری…"></textarea></label><button class="btn primary" type="submit">ذخیره وضعیت و مسئولیت واحد</button></form><h4 style="margin-top:22px">افراد تعریف‌شده این واحد</h4><div id="orgChosenPeople"></div></div>'+
+ '<label class="pilot-field">نکات و نیازهای واحد<textarea id="orgUnitNotes" rows="3" placeholder="تعاملات بین‌واحدی، چالش‌ها، پیشنهادهای بازنگری…"></textarea></label><button class="btn primary" type="submit">ذخیره وضعیت و مسئولیت واحد</button><div class="pilot-notice" role="status" id="orgStatusMessage"></div></form><h4 style="margin-top:22px">افراد تعریف‌شده این واحد</h4><div id="orgChosenPeople"></div></div>'+
  '<div class="pilot-org-warning">چارت، نام افراد و انتصابات فعلی را تأیید نمی‌کند. اسامی پایین فقط داده‌هایی هستند که خودتان در این مرورگر وارد می‌کنید؛ این نسخه پایگاه منابع انسانی یا سامانه ثبت هویت نیست.</div>'+
  '<form id="orgPersonForm"><h4 style="margin-top:20px">افزودن مسئول به فهرست محلی</h4><div class="pilot-fields"><label>نام فرد<input id="orgNewPerson" required maxlength="100" placeholder="صرفاً اطلاعات تأییدشده"></label><label>عنوان شغلی<input id="orgNewJob" required maxlength="100" placeholder="مدیر، رئیس اداره، کارشناس…"></label></div><button class="btn" type="submit">ثبت فرد برای واحد انتخاب‌شده</button></form>'+
  '<div style="margin-top:14px" id="orgPeopleList"></div></div></div>'+
@@ -351,7 +351,11 @@ var scopePicker=el("div","pilot-card pilot-global-filter");
 scopePicker.innerHTML='<label>حوزه / واحد مورد بررسی در داشبورد <select id="pilotGlobalScope">'+orgSelectorOptions(true)+'</select></label>'+
  '<button class="btn small" data-goto="pilotOrg">انتخاب آبشاری واحد ←</button>';
 topHub.querySelector(".pilot-stats").before(scopePicker);
-document.getElementById("pilotGlobalScope").value=orgIndex[pilot.scope]?pilot.scope:"";
+var rollup=el("div","pilot-card pilot-org-rollup");
+rollup.innerHTML='<div class="pilot-item-top"><h4>پوشش ۶۵ واحد در دو مسیر بازنگری و استقرار</h4><button class="btn small" data-goto="pilotOrg">مشاهده جزئیات واحدها ←</button></div><div class="pilot-org-kpis" id="pilotOrgKpis"></div><div class="pilot-org-rollup-rows" id="pilotOrgRows"></div><p class="pilot-muted">بازنگری‌شده به‌معنای تصویب نهایی سند نیست. آمار تنها از ثبت‌های همین مرورگر محاسبه می‌شود.</p>';
+topHub.querySelector(".pilot-stats").insertAdjacentElement("afterend",rollup);
+
+document.getElementById("pilotGlobalScope").value=pilot.scope==="ceo"?"ceo":orgIndex[pilot.scope]?pilot.scope:"";
 document.getElementById("pilotGlobalScope").addEventListener("change",function(){setScope(this.value)});
 addUnitAndPersonFields("metricForm","pilotMetricRisk","metricUnit","metricPerson",null);
 addUnitAndPersonFields("taskForm","taskObjective","taskUnit","taskPerson","taskWorkstream");
@@ -361,8 +365,9 @@ renderPilot=function(page){if(page==="pilotOrg"){renderOrganization();return;}ol
 var oldRenderHub=renderHub;
 renderHub=function(){
  oldRenderHub();
+ renderOrgRollup();
  var s=pilot.scope;
- document.getElementById("pilotGlobalScope").value=orgIndex[s]?s:"";
+ document.getElementById("pilotGlobalScope").value=s==="ceo"?"ceo":orgIndex[s]?s:"";
  if(!s)return;
  var metrics=pilot.measurements.filter(function(x){return scopedTo(x.unitId,s)});
  var tasks=pilot.tasks.filter(function(x){return scopedTo(x.unitId,s)});
@@ -380,15 +385,33 @@ renderHub=function(){
  xs.filter(function(x){return x.risk!=="on-track"}).map(function(x){return '<div class="pilot-list-item"><b>'+statusLabel(x.risk)+'</b><span>'+esc(x.label)+'</span></div>'}).join("") :
  '<p class="pilot-muted">در حوزه انتخاب‌شده هنوز داده یا مانعی ثبت نشده است.</p>';
 };
+
+function renderOrgRollup(){
+ var savedUnits=Object.entries(pilot.unitPlans).filter(function(kv){return orgIndex[kv[0]]});
+ var revised=savedUnits.filter(function(kv){return kv[1].revision==="validated"}).length;
+ var engaged=savedUnits.filter(function(kv){return kv[1].execution&&kv[1].execution!=="unstarted"}).length;
+ var live=savedUnits.filter(function(kv){return kv[1].execution==="live"}).length;
+ var owners=savedUnits.filter(function(kv){return !!(kv[1].revisionOwner||kv[1].executionOwner)}).length;
+ document.getElementById("pilotOrgKpis").innerHTML=[
+ ["واحدهای سازمانی","۶۵"],["بازنگری‌شده",fmt(revised)],["وارد مسیر OKR",fmt(engaged)],["اجرای جاری",fmt(live)],["دارای مسئول ثبت‌شده",fmt(owners)]
+ ].map(function(x){return '<div><strong>'+x[1]+'</strong><small>'+x[0]+'</small></div>'}).join("");
+ document.getElementById("pilotOrgRows").innerHTML=orgTopRoots.map(function(g){
+  var nodes=ORG_CHART.filter(function(n){return belongsToGroup(n.id)===g.id});
+  var reviewed=nodes.filter(function(n){return pilot.unitPlans[n.id]?.revision==="validated"}).length;
+  var started=nodes.filter(function(n){return pilot.unitPlans[n.id]?.execution&&pilot.unitPlans[n.id].execution!=="unstarted"}).length;
+  return '<div class="pilot-rollup-line"><b>'+esc(g.label)+'</b><span>بازنگری '+fmt(reviewed)+' / '+fmt(nodes.length)+'</span><span>استقرار '+fmt(started)+' / '+fmt(nodes.length)+'</span><div class="pilot-mini-track"><span style="width:'+Math.round(100*reviewed/Math.max(1,nodes.length))+'%"></span></div></div>';
+ }).join("");
+}
+
 document.addEventListener("click",function(e){
- var b=e.target.closest("[data-org-pick]");if(b){focusOrgNode(b.dataset.orgPick);document.getElementById("orgUnitSelected").scrollIntoView({block:"nearest",behavior:"smooth"});return}
+ var b=e.target.closest("[data-org-pick]");if(b){focusOrgNode(b.dataset.orgPick);document.getElementById("orgUnitSelected").classList.add("pilot-org-focused");return}
  var del=e.target.closest("[data-org-person-remove]");if(del){if(!confirm("شخص از فهرست محلی حذف شود؟"))return;pilot.people=pilot.people.filter(function(p){return p.id!==del.dataset.orgPersonRemove});save();renderOrganization();fillPeople(document.getElementById("taskPerson"),document.getElementById("taskUnit").value);fillPeople(document.getElementById("metricPerson"),document.getElementById("metricUnit").value);fillPeople(document.getElementById("meetingPerson"),document.getElementById("meetingUnit").value)}
 });
 document.addEventListener("submit",function(e){
  if(e.target.id==="orgPlanForm"){
   e.preventDefault();var u=selectedOrgUnit();if(!orgIndex[u]){alert("یک واحد سازمانی انتخاب کنید.");return}
   pilot.unitPlans[u]={revision:document.getElementById("orgRevisionStatus").value,execution:document.getElementById("orgExecutionStatus").value,revisionOwner:document.getElementById("orgRevisionOwner").value.trim(),executionOwner:document.getElementById("orgExecutionOwner").value.trim(),notes:document.getElementById("orgUnitNotes").value.trim()};
-  save();alert("وضعیت این واحد در هر دو مسیر ذخیره شد.");return;
+  save();document.getElementById("orgStatusMessage").textContent="✓ وضعیت و مسئولیت این واحد ذخیره شد.";return;
  }
  if(e.target.id==="orgPersonForm"){
   e.preventDefault();var u=selectedOrgUnit();if(!orgIndex[u]){alert("ابتدا یک واحد از چارت انتخاب کنید.");return}
