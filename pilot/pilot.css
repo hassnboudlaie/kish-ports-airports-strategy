@@ -77,3 +77,27 @@ body{font-size:15px}
  .pilot-page h3{font-size:22px}
 }
 @media(max-width:380px){.pilot-grid-links{grid-template-columns:1fr}}
+
+/* Organization master-data and two-track ownership workspace */
+.pilot-org-layout{display:grid;grid-template-columns:minmax(310px,.9fr) minmax(0,1.1fr);gap:14px;margin-bottom:16px;align-items:start}
+.pilot-org-layout .pilot-card{min-width:0}
+.pilot-org-tree{max-height:450px;overflow:auto;border:1px solid #e2eaf1;border-radius:15px;padding:7px;background:#f9fbfd}
+.pilot-org-node{width:calc(100% - (var(--depth)*8px));margin-right:calc(var(--depth)*8px);min-height:46px;border:0;border-bottom:1px solid #e6edf3;background:#fff;text-align:right;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;gap:14px;border-radius:8px;margin-bottom:4px;line-height:1.6}
+.pilot-org-node b{font-size:12px;font-weight:750;color:#23445e}
+.pilot-org-node small{font-size:10px;color:#61798c;flex-shrink:0}
+.pilot-org-node:hover,.pilot-org-node:focus-visible{background:#e9f3fa;outline:2px solid #a4cde6}
+.pilot-org-selection{font-size:13px;color:#183c5b;border:1px dashed #a9bfd2;background:#f5f9fc;border-radius:12px;padding:13px;margin-bottom:16px;line-height:1.9;overflow-wrap:anywhere}
+.pilot-org-warning{background:#fffaf0;color:#725d32;border:1px solid #eddbb7;border-radius:12px;padding:12px;margin:14px 0;font-size:12px;line-height:1.9}
+.pilot-tracks{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.pilot-tracks>div{background:#f5f8fb;border:1px solid #e0e9f1;border-radius:14px;padding:13px;display:grid;gap:10px}
+.pilot-tracks b{font-size:14px;color:#1b3f64}
+.pilot-tracks label{display:grid;gap:5px;font-size:12px;color:#496076;font-weight:700}
+.pilot-tracks input,.pilot-tracks select{border:1px solid #d1dfeb;border-radius:10px;padding:9px;font:inherit;color:#243a4e;background:white;min-height:43px;width:100%}
+.pilot-people-chip{display:inline-block;background:#e9f3fa;border-radius:100px;padding:5px 10px;color:#1e3d6c;font-size:12px;margin:0 0 5px 5px}
+.pilot-global-filter{margin:0 0 13px;display:flex;align-items:end;gap:12px;flex-wrap:wrap}
+.pilot-global-filter label{flex:1;min-width:220px;font-size:13px;color:#41586d;font-weight:800;display:grid;gap:6px}
+.pilot-global-filter select{width:100%;min-height:45px;padding:10px;border:1px solid #d4e0eb;border-radius:11px;color:#243d55;background:white;font:inherit;font-weight:500}
+.pilot-global-filter button{align-self:end;white-space:nowrap}
+.pilot-page button:focus-visible{outline:2px solid #3b78a9;outline-offset:3px}
+@media(max-width:1100px){.pilot-org-layout{grid-template-columns:1fr}}
+@media(max-width:600px){.pilot-tracks{grid-template-columns:1fr}.pilot-org-node{display:block}.pilot-org-node small{display:block;margin-top:2px}.pilot-global-filter{display:block}.pilot-global-filter button{margin-top:10px}}
