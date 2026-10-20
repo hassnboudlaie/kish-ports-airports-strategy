@@ -113,8 +113,8 @@ document.addEventListener("change",function(e){
   var reader=new FileReader();reader.onload=function(){
    try{var d=JSON.parse(reader.result);if(d.format!=="kish-perdoo-pilot"||!valid(d.pilot)||!Array.isArray(d.checkins)||!d.kpiData||!d.owners)throw Error("Invalid schema");
     if(!confirm("اطلاعات فعلی Pilot با محتوای فایل جایگزین شوند؟"))return;
-    pilot=d.pilot;checkins=d.checkins;kpiData=d.kpiData;owners=d.owners;
-    persist();save();renderAllDynamic();renderHub();notice="فایل بازیابی شد.";
+    pilot=d.pilot;pilot.people=Array.isArray(pilot.people)?pilot.people:[];pilot.unitPlans=pilot.unitPlans||{};pilot.scope=pilot.scope||"";checkins=d.checkins;kpiData=d.kpiData;owners=d.owners;
+    persist();save();renderAllDynamic();renderHub();renderOrganization();notice="فایل بازیابی شد.";
    }catch(err){alert("این فایل پشتیبان معتبر Pilot نیست.")}finally{e.target.value=""}
   };reader.readAsText(file);
  }
@@ -205,7 +205,7 @@ function addUnitAndPersonFields(formId,afterId,unitId,personId,includeStream){
  '<label>واحد سازمانی (از چارت رسمی)<select id="'+unitId+'">'+orgSelectorOptions(true)+'</select></label>'+
  '<label>مسئول / فرد (فهرست محلی)<select id="'+personId+'"><option value="">نامشخص / ثبت‌نشده</option></select></label>'+
  (includeStream?'<label>مسیر اقدام<select id="'+includeStream+'"><option value="revision">بازنگری و تدوین سند راهبردی</option><option value="execution">استقرار و اجرای OKR</option></select></label>':"");
- anchor.insertAdjacentElement("afterend",container);
+ (anchor.closest(".pilot-fields")||anchor.closest(".pilot-field")||anchor.closest("label")||anchor).insertAdjacentElement("afterend",container);
  var u=document.getElementById(unitId),p=document.getElementById(personId);
  u.value=pilot.scope&&pilot.scope!=="ceo"&&orgIndex[pilot.scope]?pilot.scope:"";
  fillPeople(p,u.value);
