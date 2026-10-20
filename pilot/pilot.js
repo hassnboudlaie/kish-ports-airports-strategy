@@ -160,6 +160,7 @@ document.addEventListener("submit",function(e){
 
 /* Organization-wide source-of-truth layer (65 official chart units).
    Only personal details typed by the visitor are saved locally in this browser. */
+/* Deputy hierarchy: 2 direct-to-CEO deputies (finance-admin, economic-technical); 3 internal airport deputies and 2 internal port deputies. */
 var orgTopRoots=[
  {id:"ceo",label:"حوزه مدیرعامل و واحدهای ستادی"},
  {id:"org-finance-admin",label:"معاونت مالی، اداری و پشتیبانی"},
@@ -320,7 +321,7 @@ document.getElementById("desktopNav").appendChild(navOrg);
 extra.pilotOrg="ساختار سازمانی و نقش واحدها";titles.pilotOrg=extra.pilotOrg;
 var orgPage=el("section","page pilot-page");orgPage.id="pilotOrg";
 orgPage.innerHTML=
-'<div class="pilot-head"><div><span class="pilot-kicker">ORGANIZATION STRUCTURE · SOURCE 1404</span><h3>چارت سازمانی و مسئولیت واحدها</h3><p>مبنای انتخاب واحد در هر دو مسیر «بازنگری سند راهبردی» و «استقرار OKR»، چارت رسمی ۱۱صفحه‌ای شرکت است.</p></div><span class="pilot-pill">۶۵ واحد رسمی · ۵ حوزه نمایشی</span></div>'+
+'<div class="pilot-head"><div><span class="pilot-kicker">ORGANIZATION STRUCTURE · SOURCE 1404</span><h3>چارت سازمانی و مسئولیت واحدها</h3><p>مبنای انتخاب واحد در هر دو مسیر «بازنگری سند راهبردی» و «استقرار OKR»، چارت رسمی ۱۱صفحه‌ای شرکت است.</p><p><b>ساختار مصوب در سطح شرکت: ۲ معاونت ستادی</b> (مالی، اداری و پشتیبانی؛ اقتصادی و فنی) و ۲ اداره کل (بنادر و فرودگاه‌ها). پنج معاونت دیگر، زیرمجموعه اداره‌های کل هستند؛ نه معاونت مستقیم شرکت.</p></div><span class="pilot-pill">۶۵ واحد رسمی · ۲ معاونت ستادی · ۵ معاونت تابعه</span></div>'+
 '<div class="pilot-org-layout"><div class="pilot-card"><h4>فیلتر و انتخاب آبشاری واحد</h4><div class="pilot-fields single">'+
  '<label>حوزه سازمانی<select id="orgBranch"></select></label>'+
  '<label>سطح نخست: اداره کل / معاونت / مدیریت<select id="orgTier1"></select></label>'+
