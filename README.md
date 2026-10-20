@@ -1,15 +1,5 @@
-# Kish Ports & Airports Strategy
+# Private application entry
 
-Standalone strategy execution web app for Kish Ports & Airports.
+Open the owner-private workspace: https://hasan-private-apps.hasanboudlaie.chatgpt.site/apps/kish-ports-airports-strategy/
 
-## Live site
-
-https://hassnboudlaie.github.io/kish-ports-airports-strategy/
-
-## Editable source
-
-- Production: `index.html`
-- Editable working copy: `editable-source.html`
-- Visual identity notes: `BRAND_GUIDE.md`
-
-The interface now uses the official Kish Ports & Airports visual identity references from https://kishports.com/ including the official logo, core navy/blue palette, and port/airport icon language.
+Application source is preserved in the private Site. See AGENTS.md for the editing workflow.
